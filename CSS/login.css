@@ -27,18 +27,19 @@ html, body {
 .container {
   max-width: 400px;
   margin: 40px auto;
-  padding: 35px 25px;
+  padding: 40px 30px;
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border-radius: 20px;
+  border-radius: 24px;
   box-shadow: var(--shadow-soft);
   position: relative;
   overflow: hidden;
+  animation: containerAppear 0.6s ease-out forwards;
 }
 
-/* Barra superior com gradiente branco para cinza claro */
+/* Barra superior com gradiente */
 .container::before {
   content: "";
   position: absolute;
@@ -46,88 +47,27 @@ html, body {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(90deg, #ffffff, #f0f0f0);
+  background: linear-gradient(90deg, #ffffff, rgba(255,255,255,0.5));
   z-index: 5;
-}
-
-/* === Toggle de modo === */
-.mode-switch-container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 35px;
-}
-
-.mode-switch {
-  display: flex;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Linha divisória abaixo do seletor de modo */
-.mode-divider {
-  height: 1px;
-  background: rgba(255, 255, 255, 0.15);
-  margin-top: 18px;
-  width: 100%;
-}
-
-.mode-btn {
-  flex: 1;
-  padding: 14px 0;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-color);
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.mode-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: white;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.3s ease;
-}
-
-.mode-btn:hover::before {
-  opacity: 0.05;
-}
-
-.mode-btn.active {
-  background: var(--text-color);
-  color: var(--primary-color);
-  font-weight: 600;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* === Título da página === */
 .page-title {
   font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   text-align: center;
   letter-spacing: 0.2px;
   color: var(--text-color);
+  animation: slideDown 0.5s ease-out forwards;
 }
 
 /* === Ícone de login === */
 .login-icon {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
-  animation: fadeIn 0.5s ease-out forwards;
+  margin-bottom: 35px;
+  animation: pulse 1.5s ease-in-out infinite alternate;
 }
 
 /* === Formulário === */
@@ -136,6 +76,7 @@ html, body {
   flex-direction: column; 
   gap: 24px;
   width: 100%;
+  animation: fadeIn 0.5s ease-out 0.2s both;
 }
 
 .form label { 
@@ -145,13 +86,14 @@ html, body {
   font-weight: 500;
   width: 100%;
   letter-spacing: 0.3px;
+  position: relative;
 }
 
 .form input {
   margin-top: 8px;
-  padding: 14px 18px;
+  padding: 16px 18px;
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 1rem;
   outline: none;
   transition: all 0.25s ease;
@@ -182,35 +124,23 @@ html, body {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
 
-/* Esqueceu a senha */
-.forgot-password {
-  text-align: right;
-  margin-top: -8px;
+.toggle-password:hover {
+  opacity: 1;
 }
 
-.forgot-link {
-  color: var(--link-color);
-  text-decoration: none;
+/* Feedback de validação */
+.input-feedback {
+  min-height: 20px;
   font-size: 0.85rem;
-  transition: all 0.2s ease;
-}
-
-.forgot-link:hover {
-  text-decoration: underline;
-  color: white;
-}
-
-/* Mensagem de erro */
-.error-message {
-  color: var(--error-color);
-  font-size: 0.85rem;
-  margin-top: 5px;
+  margin-top: 6px;
   animation: fadeIn 0.3s ease-out forwards;
   font-weight: 500;
   display: flex;
@@ -218,9 +148,60 @@ html, body {
   gap: 5px;
 }
 
+.error-message {
+  color: var(--error-color);
+}
+
 .error-message::before {
   content: "⚠️";
   font-size: 12px;
+}
+
+.success-message {
+  color: var(--success-color);
+}
+
+.success-message::before {
+  content: "✓";
+  font-size: 12px;
+}
+
+/* Opção Lembrar-me e Esqueceu a senha */
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: white;
+  margin: 0;
+  cursor: pointer;
+}
+
+.remember-me label {
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+  color: white;
 }
 
 /* === Botão Login === */
@@ -230,7 +211,7 @@ html, body {
   background: white;
   color: var(--primary-color);
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
@@ -242,6 +223,7 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: fadeIn 0.5s ease-out 0.4s both;
 }
 
 .btn-login:hover {
@@ -255,11 +237,28 @@ html, body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.btn-arrow {
+  display: inline-block;
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+.btn-login:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+/* Estado de carregamento do botão */
+.btn-login.loading {
+  background-color: #f0f0f0;
+  color: var(--primary-color);
+  cursor: wait;
+}
+
 /* Efeito ripple para o botão */
 .ripple {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(76, 42, 217, 0.3);
   transform: scale(0);
   animation: ripple-animation 0.5s linear;
 }
@@ -276,6 +275,7 @@ html, body {
   margin-top: 30px;
   text-align: center;
   font-size: 0.9rem;
+  animation: fadeIn 0.5s ease-out 0.6s both;
 }
 
 .signup-link {
@@ -305,6 +305,21 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes containerAppear {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  from { transform: scale(1); opacity: 0.8; }
+  to { transform: scale(1.05); opacity: 1; }
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
@@ -315,16 +330,16 @@ html, body {
   animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-.form, .login-icon, .btn-login {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
 /* === Responsividade === */
 @media (max-width: 480px) {
   .container {
-    margin: 20px 10px;
+    margin: 20px 15px;
     padding: 30px 20px;
-    border-radius: 16px;
+    border-radius: 20px;
+  }
+  
+  .page-title {
+    font-size: 1.6rem;
   }
 }
 
