@@ -1,0 +1,335 @@
+/* Reset básico e configurações gerais */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { 
+  height: 100%; 
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+  background: linear-gradient(135deg, #3000BF 0%, #4C2AD9 100%); 
+  color: white; 
+}
+
+:root {
+  --primary-color: #3000BF;
+  --primary-light: #4C2AD9;
+  --text-color: #ffffff;
+  --input-bg: #ffffff;
+  --input-text: #333333;
+  --border-color: rgba(255, 255, 255, 0.3);
+  --focus-border: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.15);
+  --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 12px 28px rgba(0, 0, 0, 0.25);
+  --error-color: #ff4d4d;
+  --success-color: #4CAF50;
+  --warning-color: #FFC107;
+  --link-color: #E0E0FF;
+}
+
+.container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 35px 25px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Barra superior com gradiente branco para cinza claro */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #ffffff, #f0f0f0);
+  z-index: 5;
+}
+
+/* === Toggle de modo === */
+.mode-switch-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 35px;
+}
+
+.mode-switch {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Linha divisória abaixo do seletor de modo */
+.mode-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-top: 18px;
+  width: 100%;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 14px 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.mode-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.mode-btn:hover::before {
+  opacity: 0.05;
+}
+
+.mode-btn.active {
+  background: var(--text-color);
+  color: var(--primary-color);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* === Título da página === */
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+  letter-spacing: 0.2px;
+  color: var(--text-color);
+}
+
+/* === Ícone de login === */
+.login-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* === Formulário === */
+.form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 24px;
+  width: 100%;
+}
+
+.form label { 
+  display: flex; 
+  flex-direction: column; 
+  font-size: 0.95rem;
+  font-weight: 500;
+  width: 100%;
+  letter-spacing: 0.3px;
+}
+
+.form input {
+  margin-top: 8px;
+  padding: 14px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.25s ease;
+  width: 100%;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+}
+
+.form input:focus { 
+  border-color: var(--focus-border); 
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Campo de senha com botão de visualização */
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Esqueceu a senha */
+.forgot-password {
+  text-align: right;
+  margin-top: -8px;
+}
+
+.forgot-link {
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+  color: white;
+}
+
+/* Mensagem de erro */
+.error-message {
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin-top: 5px;
+  animation: fadeIn 0.3s ease-out forwards;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.error-message::before {
+  content: "⚠️";
+  font-size: 12px;
+}
+
+/* === Botão Login === */
+.btn-login {
+  margin-top: 35px;
+  padding: 16px;
+  background: white;
+  color: var(--primary-color);
+  border: none;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-login:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeito ripple para o botão */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(0);
+  animation: ripple-animation 0.5s linear;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Link para criar conta */
+.signup-prompt {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.signup-link {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+  color: white;
+}
+
+/* === Campos com validação === */
+.input-valid {
+  border-color: var(--success-color) !important;
+}
+
+.input-invalid {
+  border-color: var(--error-color) !important;
+}
+
+/* === Animações e Transições === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+  animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.form, .login-icon, .btn-login {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* === Responsividade === */
+@media (max-width: 480px) {
+  .container {
+    margin: 20px 10px;
+    padding: 30px 20px;
+    border-radius: 16px;
+  }
+}
+
+/* === Estilização de placeholder === */
+::placeholder {
+  color: #999;
+  opacity: 0.8;
+}

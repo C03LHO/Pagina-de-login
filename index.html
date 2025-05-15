@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | ServiçosApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-title">Entrar</h1>
+    
+    <!-- Toggle modo Cliente / Trabalhador com divisor -->
+    <div class="mode-switch-container">
+      <div class="mode-switch">
+        <button class="mode-btn active" data-mode="cliente">Cliente</button>
+        <button class="mode-btn" data-mode="trabalhador">Trabalhador</button>
+      </div>
+      <div class="mode-divider"></div>
+    </div>
+
+    <!-- Ícone de usuário -->
+    <div class="login-icon">
+      <svg width="70" height="70" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="8" r="5" stroke="#ffffff" stroke-width="2" />
+        <path d="M3 21c0-4.4 3.6-8 8-8h2c4.4 0 8 3.6 8 8" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </div>
+
+    <form class="form">
+      <label>
+        <span>CPF</span>
+        <input type="text" name="cpf" placeholder="000.000.000-00" required maxlength="14" />
+      </label>
+
+      <label class="password-field">
+        <span>Senha</span>
+        <div class="password-input-wrapper">
+          <input type="password" name="password" placeholder="Digite sua senha" required />
+          <button type="button" class="toggle-password">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="eye-icon">
+              <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="3" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </label>
+
+      <div class="forgot-password">
+        <a href="#" class="forgot-link">Esqueceu a senha?</a>
+      </div>
+    </form>
+
+    <button class="btn-login">Entrar</button>
+    
+    <div class="signup-prompt">
+      <p>Ainda não tem uma conta? <a href="index.html" class="signup-link">Criar conta</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Toggle de modo
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    let currentMode = 'cliente';
+    
+    modeButtons.forEach(btn => btn.addEventListener('click', () => {
+      modeButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentMode = btn.dataset.mode;
+      console.log('Modo selecionado:', currentMode);
+    }));
+
+    // Máscara para CPF
+    const cpfInput = document.querySelector('input[name="cpf"]');
+    cpfInput.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      
+      if (value.length > 9) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+      } else if (value.length > 6) {
+        value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      } else if (value.length > 3) {
+        value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+      }
+      
+      e.target.value = value;
+
+      // Validação em tempo real
+      if (value.length === 14) { // Formato completo com máscara
+        if (isValidCPF(value)) {
+          e.target.classList.remove('input-invalid');
+          e.target.classList.add('input-valid');
+          const existingError = e.target.parentNode.querySelector('.error-message');
+          if (existingError) existingError.remove();
+        } else {
+          e.target.classList.add('input-invalid');
+          e.target.classList.remove('input-valid');
+          const existingError = e.target.parentNode.querySelector('.error-message');
+          if (existingError) existingError.remove();
+          const errorMessage = document.createElement('div');
+          errorMessage.className = 'error-message';
+          errorMessage.textContent = 'CPF inválido';
+          e.target.parentNode.appendChild(errorMessage);
+        }
+      } else {
+        e.target.classList.remove('input-valid', 'input-invalid');
+        const existingError = e.target.parentNode.querySelector('.error-message');
+        if (existingError) existingError.remove();
+      }
+    });
+
+    // Função para validar CPF
+    function isValidCPF(cpf) {
+      cpf = cpf.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos
+      if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false; // Verifica tamanho e sequência repetida
+
+      let sum = 0;
+      let remainder;
+
+      // Valida primeiro dígito verificador
+      for (let i = 1; i <= 9; i++) {
+        sum += parseInt(cpf[i - 1]) * (11 - i);
+      }
+      remainder = (sum * 10) % 11;
+      if (remainder === 10 || remainder === 11) remainder = 0;
+      if (remainder !== parseInt(cpf[9])) return false;
+
+      // Valida segundo dígito verificador
+      sum = 0;
+      for (let i = 1; i <= 10; i++) {
+        sum += parseInt(cpf[i - 1]) * (12 - i);
+      }
+      remainder = (sum * 10) % 11;
+      if (remainder === 10 || remainder === 11) remainder = 0;
+      if (remainder !== parseInt(cpf[10])) return false;
+
+      return true;
+    }
+
+    // Mostrar/Ocultar senha
+    const togglePassword = document.querySelector('.toggle-password');
+    const passwordField = document.querySelector('input[name="password"]');
+    
+    togglePassword.addEventListener('click', function() {
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      
+      // Atualizar ícone
+      const eyeIcon = this.querySelector('.eye-icon');
+      if (type === 'text') {
+        eyeIcon.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="1" y1="1" x2="23" y2="23" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      } else {
+        eyeIcon.innerHTML = `
+          <path d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7z" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      }
+    });
+
+    // Efeito ripple para o botão de login
+    const btnLogin = document.querySelector('.btn-login');
+    btnLogin.addEventListener('click', function(e) {
+      // Efeito visual de ripple
+      let posX = e.offsetX;
+      let posY = e.offsetY;
+      
+      let rippleEffect = document.createElement('span');
+      rippleEffect.className = 'ripple';
+      rippleEffect.style.left = posX + 'px';
+      rippleEffect.style.top = posY + 'px';
+      rippleEffect.style.width = Math.max(this.offsetWidth, this.offsetHeight) * 2 + 'px';
+      rippleEffect.style.height = Math.max(this.offsetWidth, this.offsetHeight) * 2 + 'px';
+      rippleEffect.style.marginLeft = -(Math.max(this.offsetWidth, this.offsetHeight)) + 'px';
+      rippleEffect.style.marginTop = -(Math.max(this.offsetWidth, this.offsetHeight)) + 'px';
+      
+      this.appendChild(rippleEffect);
+      
+      setTimeout(() => {
+        rippleEffect.remove();
+      }, 500);
+      
+      // Validação do CPF (você já tem essa função implementada)
+      // Validação básica da senha
+      if (passwordField.value.length < 6) {
+        passwordField.classList.add('input-invalid');
+        passwordField.classList.add('shake');
+        
+        // Adicionar mensagem de erro se não existir
+        if (!passwordField.parentElement.parentElement.querySelector('.error-message')) {
+          const errorMessage = document.createElement('div');
+          errorMessage.className = 'error-message';
+          errorMessage.textContent = 'Senha deve ter pelo menos 6 caracteres';
+          passwordField.parentElement.parentElement.appendChild(errorMessage);
+        }
+        
+        setTimeout(() => {
+          passwordField.classList.remove('shake');
+        }, 600);
+        
+        return;
+      }
+      
+      // Aqui você adicionaria o código para enviar o formulário de login
+      console.log('Login enviado!');
+    });
+  </script>
+</body>
+</html>
